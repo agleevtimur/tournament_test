@@ -1,3 +1,7 @@
+{% set defaultMessage = 'Изменения прошли успешно!' %}
+{% if message is not defined %}
+    {% set message = defaultMessage %}
+{% endif %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,7 +13,7 @@
     </head>
     <body>
         {% block body %}
-            Изменения прошли успешно!
+            {{ message }}
             <form action={{ backUrl }}>
                 <button type="submit">вернуться</button>
             </form>
