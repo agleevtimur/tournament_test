@@ -1,0 +1,6 @@
+<h3>Список турниров</h3>
+<ul id="tournament_list">
+    {% for tournament in tournaments %}
+        <li>{{ tournament.name }} <form action="/tournaments/{{ tournament.name }}"><button>посмотреть сетку</button></form></li><br>
+    {% endfor %}
+</ul>

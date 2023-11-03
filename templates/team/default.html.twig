@@ -1,0 +1,38 @@
+
+{% block body %}
+    <h3>Список команд (управление)</h3>
+    <ul id="team_list">
+        {% for team in teams %}
+            <li>{{ team.name }} <button name="delete_button" id={{ team.id }}>удалить</button></li><br>
+        {% endfor %}
+    </ul>
+    <button id="add_team">Добавить команду</button>
+    <br>
+    <br>
+        <form id="form" action="/teams" method="post" style="visibility: hidden">
+            <label>
+                Название
+                <input type="text" name="name" required>
+            </label>
+            <input type="submit" value="отправить">
+        </form>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        const addButton = document.getElementById('add_team');
+        const teamList = document.getElementById('team_list');
+        const form = document.getElementById('form');
+
+        addButton.addEventListener('click', () => {
+            form.style.visibility = "visible";
+        });
+        teamList.addEventListener('click', async (e) => {
+            if (e.target.name === "delete_button") {
+                let response = await fetch(`/teams/${e.target.id}`, {
+                    method: 'DELETE'
+                });
+                await document.write(await response.text())
+            }
+        })
+    </script>
+{% endblock %}

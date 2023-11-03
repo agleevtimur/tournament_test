@@ -1,0 +1,44 @@
+
+{% block body %}
+    <h3>Список турниров (управление)</h3>
+    <ul id="tournament_list">
+        {% for tournament in tournaments %}
+            <li>{{ tournament.name }} <button name="delete_button" id={{ tournament.id }}>удалить</button></li><br>
+        {% endfor %}
+    </ul>
+    <button id="add_tournament">Добавить турнир</button>
+    <br>
+    <br>
+    <form id="form" action="/tournaments" method="post" style="visibility: hidden">
+        <label>
+            Название
+            <input type="text" name="name" required>
+        </label>
+        <div>Выберите участников</div>
+        {% for team in teams %}
+            <label for={{ team.id }}>{{ team.name }}</label>
+            <input id={{ team.id }} type="checkbox" name="team_selection[]" value={{ team.id }} checked>
+        {% endfor %}
+        <input type="submit" value="отправить">
+
+    </form>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        const addButton = document.getElementById('add_tournament');
+        const teamList = document.getElementById('tournament_list');
+        const form = document.getElementById('form');
+
+        addButton.addEventListener('click', () => {
+            form.style.visibility = "visible";
+        });
+        teamList.addEventListener('click', async (e) => {
+            if (e.target.name === "delete_button") {
+                let response = await fetch(`/tournaments/${e.target.id}`, {
+                    method: 'DELETE'
+                });
+                await document.write(await response.text())
+            }
+        })
+    </script>
+{% endblock %}
