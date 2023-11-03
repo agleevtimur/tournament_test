@@ -60,10 +60,6 @@ class TournamentController extends AbstractController
     {
         $teams = $this->teamRepository->findBy(['id' => $request->get('team_selection')]);
 
-        if (count($teams) % 2 !== 0) {
-            return $this->render('return.html.twig', ['backUrl' => '/tournaments', 'message' => 'кол-во команд должно быть четным!']);
-        }
-
         shuffle($teams);
         $schedule = $scheduleGenerator->generate($teams);
 

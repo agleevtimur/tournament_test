@@ -14,6 +14,10 @@ class ScheduleDefaultGenerator implements ScheduleGeneratorInterface
      */
     public function generate(array $teams): array
     {
+        if (count($teams) % 2 !== 0) {
+            $teams[] = (new Team())->setName('команда отдыхает');
+        }
+
         $teamsCount = count($teams);
         $matchUp = [];
         $day = 1;
