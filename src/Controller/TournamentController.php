@@ -6,7 +6,7 @@ use App\Entity\Team;
 use App\Entity\Tournament;
 use App\Repository\TeamRepository;
 use App\Repository\TournamentRepository;
-use App\Service\ScheduleDefaultGenerator;
+use App\Service\DefaultScheduleGenerator;
 use App\Service\ScheduleGeneratorInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,7 +61,8 @@ class TournamentController extends AbstractController
         $teams = $this->teamRepository->findBy(['id' => $request->get('team_selection')]);
 
         shuffle($teams);
-        $schedule = $scheduleGenerator->generate($teams);
+        $teamsNamesList = array_map(fn($team) => $team->getName(), $teams);
+        $schedule = $scheduleGenerator->generate($teamsNamesList);
 
         $tournament = (new Tournament())
             ->setName($request->get('name'))

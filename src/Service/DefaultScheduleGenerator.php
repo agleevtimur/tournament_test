@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Team;
 
-class ScheduleDefaultGenerator implements ScheduleGeneratorInterface
+class DefaultScheduleGenerator implements ScheduleGeneratorInterface
 {
     private static int $maxGamesPerDay = 4;
 
@@ -15,7 +15,7 @@ class ScheduleDefaultGenerator implements ScheduleGeneratorInterface
     public function generate(array $teams): array
     {
         if (count($teams) % 2 !== 0) {
-            $teams[] = (new Team())->setName('команда отдыхает');
+            $teams[] = 'отдых';
         }
 
         $teamsCount = count($teams);
@@ -30,7 +30,7 @@ class ScheduleDefaultGenerator implements ScheduleGeneratorInterface
 
         while (true) {
             for ($i = 0; $i < $teamsCount / 2; $i++) {
-                $dailyGames[] = "{$teams[$i]->getName()} : {$teams[$teamsCount - 1 - $i]->getName()}";
+                $dailyGames[$teams[$i]] = $teams[$teamsCount - 1 - $i];
                 $playedMatchCount++;
 
                 if ($dailyLimit($playedMatchCount)) {

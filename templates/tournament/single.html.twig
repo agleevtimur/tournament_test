@@ -2,8 +2,8 @@
     {% for day, games in schedule %}
         <div>
             День {{ day }}<br>
-            {% for game in games %}
-                {{ game }}<br>
+            {% for team1, team2 in games %}
+                {{ team1 }} : {{ team2 }}<br>
             {% endfor %}
         </div>
     {% endfor %}
