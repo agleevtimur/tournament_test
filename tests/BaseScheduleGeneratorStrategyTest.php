@@ -2,19 +2,26 @@
 
 namespace App\Tests;
 
-use App\Service\DefaultScheduleGenerator;
+use App\Entity\Team;
+use App\Service\ScheduleGenerator\ScheduleGeneratorManager;
+use App\Service\ScheduleGenerator\Strategy\BaseScheduleGeneratorStrategy;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class DefaultScheduleGeneratorTest extends TestCase
+class BaseScheduleGeneratorStrategyTest extends TestCase
 {
     #[DataProvider('teamsProvider')]
-    public function testGenerate(array $data, array $expected)
+    public function testGenerate(int $dailyLimit, array $data, array $expected)
     {
-        $scheduleGenerator = new DefaultScheduleGenerator();
-        $schedule = $scheduleGenerator->generate($data);
+        $teams = array_map(fn($name) => (new Team())->setName($name), $data);
+        $scheduleGenerator = new ScheduleGeneratorManager();
+        $schedule = $scheduleGenerator
+            ->addGamesPerDayLimit($dailyLimit)
+            ->setScheduleGenerator(new BaseScheduleGeneratorStrategy())
+            ->addExtraTeamNameForOddCount('отдых')
+            ->generate($teams);
 
-        $this->assertSame($schedule, $expected);
+        $this->assertSame($expected, $schedule);
     }
 
 
@@ -22,6 +29,7 @@ class DefaultScheduleGeneratorTest extends TestCase
     {
         return [
             'default' => [
+                4,
                 ['k1', 'k2', 'k3', 'k4', 'k5', 'k6'],
                 [
                     '1' => [
@@ -52,6 +60,7 @@ class DefaultScheduleGeneratorTest extends TestCase
                 ]
             ],
             'oddTeamsCount' => [
+                4,
                 ['k1', 'k2', 'k3', 'k4', 'k5'],
                 [
                     '1' => [
@@ -78,6 +87,24 @@ class DefaultScheduleGeneratorTest extends TestCase
                         'k1' => 'k2',
                         'k3' => 'отдых',
                         'k4' => 'k5'
+                    ]
+                ]
+            ],
+            'countLessThanDailyLimit' => [
+                6,
+                ['k1', 'k2', 'k3', 'k4'],
+                [
+                    '1' => [
+                        'k1' => 'k4',
+                        'k2' => 'k3',
+                    ],
+                    '2' => [
+                        'k1' => 'k3',
+                        'k4' => 'k2',
+                    ],
+                    '3' => [
+                        'k1' => 'k2',
+                        'k3' => 'k4',
                     ]
                 ]
             ]

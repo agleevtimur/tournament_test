@@ -12,6 +12,3 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
-    Service\ScheduleDefaultGenerator: ~
-    Service\ScheduleGeneratorInterface: '@Service\ScheduleDefaultGenerator'

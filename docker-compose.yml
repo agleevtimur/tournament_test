@@ -26,6 +26,4 @@ services:
       - "5432:5432"
 
 volumes:
-###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###

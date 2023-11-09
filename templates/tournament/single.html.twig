@@ -1,7 +1,7 @@
 {% block body %}
     {% for day, games in schedule %}
         <div>
-            День {{ day }}<br>
+            <br>День {{ day }}<br>
             {% for team1, team2 in games %}
                 {{ team1 }} : {{ team2 }}<br>
             {% endfor %}

@@ -2,17 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Team;
 use App\Entity\Tournament;
 use App\Repository\TeamRepository;
 use App\Repository\TournamentRepository;
-use App\Service\DefaultScheduleGenerator;
-use App\Service\ScheduleGeneratorInterface;
-use Doctrine\ORM\EntityManager;
+use App\Service\OrderStrategy\OrderShuffleStrategy;
+use App\Service\ScheduleGenerator\DefaultScheduleGenerator;
+use App\Service\ScheduleGenerator\ScheduleGeneratorManager;
+use App\Service\ScheduleGenerator\Strategy\BaseScheduleGeneratorStrategy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TournamentController extends AbstractController
@@ -56,13 +55,11 @@ class TournamentController extends AbstractController
 
 
     #[Route('/tournaments', methods: ['POST'])]
-    public function add(Request $request, ScheduleGeneratorInterface $scheduleGenerator)
+    public function add(Request $request, DefaultScheduleGenerator $scheduleGenerator)
     {
         $teams = $this->teamRepository->findBy(['id' => $request->get('team_selection')]);
 
-        shuffle($teams);
-        $teamsNamesList = array_map(fn($team) => $team->getName(), $teams);
-        $schedule = $scheduleGenerator->generate($teamsNamesList);
+        $schedule = $scheduleGenerator->generate($teams);
 
         $tournament = (new Tournament())
             ->setName($request->get('name'))

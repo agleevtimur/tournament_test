@@ -14,7 +14,7 @@
     <body>
         {% block body %}
             {{ message }}
-            <form action={{ backUrl }}>
+            <form method="get" action={{ backUrl }}>
                 <button type="submit">вернуться</button>
             </form>
         {% endblock %}
